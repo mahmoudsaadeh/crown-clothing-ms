@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
 
-import './menu-item.styles.scss'
+import { withRouter } from 'react-router-dom';
+
+import './menu-item.styles.scss';
 
 
 // this is the same as passing props and then calling props.title
@@ -12,8 +14,11 @@ import './menu-item.styles.scss'
 // issue: why don't we wrap the background-image div around our content div
 // --> since if we increase the size of the first outer div, we don't want the inner div
 // size to also increase, we want the content size to stay the same
-const MenuItem = ({ title, imageUrl, size }) => (
-    <div className={`${size} menu-item`}>
+
+// some matched url/linkUrl
+const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
+    <div className={`${size} menu-item`} 
+            onClick={() => history.push(`${match.url}${linkUrl}`)}>
         <div className='background-image' style={{
                 backgroundImage: `url(${imageUrl})`,
                 backgroundSize: size
@@ -26,4 +31,7 @@ const MenuItem = ({ title, imageUrl, size }) => (
     </div>
 );
 
-export default MenuItem;
+// this returns us a super powered MenuItem component with access to location, match,
+// and history props that we need access to
+
+export default withRouter(MenuItem);
