@@ -47,7 +47,7 @@ class Directory extends React.Component {
         };
     }
 
-    // as es6 trick to avoid writing to much codes, as all the params we are passing
+    // an es6 trick to avoid writing to much codes, as all the params we are passing
     // are the same as in the section prop
     render() {
         return (
