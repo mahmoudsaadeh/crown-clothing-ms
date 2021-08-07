@@ -2,6 +2,8 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 
+// https://react-firebase-js.com/docs/react-firebase-auth/getting-started
+
 const config = {
     apiKey: "AIzaSyDgcpf6Q4Czp0beQlc0tCn8e8qJFHbkfXI",
     authDomain: "crown-clothing-db-3eef9.firebaseapp.com",

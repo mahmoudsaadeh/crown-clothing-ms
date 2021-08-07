@@ -7,3 +7,11 @@ a {
     text-decoration: none;
     color: black;
 }
+
+/* *: a universal selector
+    border-box: remove extra paddings that come with every element by default
+    --> now the padding, margin, and border do not affect the ELEMENT SIZE
+*/
+* {
+    box-sizing: border-box;
+}

@@ -28,7 +28,8 @@ $main-color: black;
       outline: none;
     }
 
-    
+    // apply the mixin to all .form-input-label having elements with class .form-input
+    // before it
     &:focus ~ .form-input-label {
       @include shrinkLabel();
     }
