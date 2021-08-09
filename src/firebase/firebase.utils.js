@@ -14,6 +14,37 @@ const config = {
     measurementId: "G-ZKC6DEE04Z"
 };
 
+// is will be an async action because we're making an API request
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+    // if user is not signed in (does not exist OR null), then leave this func
+    if (!userAuth) return;
+
+    const userRef = firestore.doc(`users/${userAuth.uid}`);
+    const snapshot = await userRef.get();
+
+    //console.log(snapshot);
+
+    // if snapshot doesn't exits -> no data found, so we will add some
+    if (!snapshot.exists) {
+        const { displayName, email } = userAuth;
+        const createdAt = new Date(); // returns current date and time
+
+        try {
+            await userRef.set({
+                displayName,
+                email,
+                createdAt,
+                ...additionalData
+            })
+        } catch (error) {
+            console.log('error creating user', error.message);
+        }
+    }
+
+    return userRef;
+}
+
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
@@ -24,7 +55,7 @@ export const firestore = firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider();
 // we want to always trigger the google popup whenever we use this GoogleAuthProvider
 // for sign in and authentication
-provider.setCustomParameters({prompt: 'select_account'});
+provider.setCustomParameters({ prompt: 'select_account' });
 
 
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
