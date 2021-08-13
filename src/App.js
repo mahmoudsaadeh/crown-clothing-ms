@@ -11,15 +11,18 @@ import { Route, Switch } from 'react-router-dom';
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/user.actions';
+
 
 class App extends React.Component {
 
-  constructor() {
+  /*constructor() {
     super();
     this.state = {
       currentUser: null
     }
-  }
+  }*/
 
   unsubscribeFromAuth = null;
 
@@ -38,6 +41,9 @@ class App extends React.Component {
 
   // storing data in our app - in state (not db)
   componentDidMount() {
+
+    const { setCurrentUser } = this.props;
+
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if userAuth is not null
       if (userAuth) {
@@ -49,17 +55,12 @@ class App extends React.Component {
         userRef.onSnapshot(snapshot => {
           //console.log(snapshot);
           //console.log(snapshot.data());
-          this.setState(
-            {
+          setCurrentUser({
               currentUser: {
                 id: snapshot.id,
                 ...snapshot.data()
               }
-            }, 
-            () => {
-              console.log(this.state);
-            }
-          );
+            });
         });
         // console.log cannot go after setState because setState is asynchronous
         // meaning that there is a chance that when we call it, setState may have
@@ -68,7 +69,8 @@ class App extends React.Component {
         //console.log(this.state);
       }
       else {
-        this.setState({ currentUser: userAuth });
+        // set currentUser to null
+        setCurrentUser(userAuth);
       }
     })
   }
@@ -86,7 +88,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
@@ -97,6 +99,18 @@ class App extends React.Component {
   }
 
 }
+
+// our app doesn't need current user anymore, because outside of passing it into
+// our header, it only sets it, but it doesn't do anything with the current user
+// value in its component itself
+
+const mapDispatchToProps = (dispatch) => ({
+  // dispatch is a way for redux to know that whatever object you're passing me,
+  // is going to be an action object that I'm gonna pass to every reducer
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(App);
 
 // dynamically giving a path or a link
 /*
@@ -147,4 +161,4 @@ function App() {
 */
 
 
-export default App;
+

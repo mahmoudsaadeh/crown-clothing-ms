@@ -8,8 +8,8 @@ import CustomButton from '../custom-button/custom-button.component';
 import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
 
 class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         this.state = {
             displayName: '',
@@ -25,12 +25,13 @@ class SignUp extends React.Component {
         // same as in App.js when making google auth (but this time, we are manually creating it)
         const { displayName, email, password, confirmPassword } = this.state;
 
-        if (password != confirmPassword) {
+        if (password !== confirmPassword) {
             alert("Passwords don't match!");
             return;
         }
 
         try {
+            // we added brackets to 'user' because an object is returned
             const { user } = await auth.createUserWithEmailAndPassword(email, password);
 
             await createUserProfileDocument(user, { displayName });
@@ -49,7 +50,7 @@ class SignUp extends React.Component {
     }
 
     handleChange = event => {
-        const { name, value } = event.target;
+        const { name, value } = event.target; // check in console for 'target'
         this.setState({[name]: value});
     }
 
