@@ -7,7 +7,7 @@ import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
@@ -42,7 +42,7 @@ class App extends React.Component {
   // storing data in our app - in state (not db)
   componentDidMount() {
 
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser } = this.props; // what props??
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if userAuth is not null
@@ -56,11 +56,11 @@ class App extends React.Component {
           //console.log(snapshot);
           //console.log(snapshot.data());
           setCurrentUser({
-              currentUser: {
-                id: snapshot.id,
-                ...snapshot.data()
-              }
-            });
+            currentUser: {
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          });
         });
         // console.log cannot go after setState because setState is asynchronous
         // meaning that there is a chance that when we call it, setState may have
@@ -92,7 +92,13 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
-          <Route path='/signin' component={SignInAndSignUpPage} />
+          {/* render: a js invocation that determines what component to return */}
+          <Route exact path='/signin'
+            render={() =>
+              this.props.currentUser ?
+                (<Redirect to='/' />) :
+                (<SignInAndSignUpPage />)
+            } />
         </Switch>
       </div>
     );
@@ -107,10 +113,18 @@ class App extends React.Component {
 const mapDispatchToProps = (dispatch) => ({
   // dispatch is a way for redux to know that whatever object you're passing me,
   // is going to be an action object that I'm gonna pass to every reducer
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+
+  // setting the 'user' to setCurrentUser (first one here) which was in the ComponentDidMount, then passing that user object as the payload to the user.actions.js [explained by me]
+  setCurrentUser: (user) => dispatch(setCurrentUser(user))
 });
 
-export default connect(null, mapDispatchToProps)(App);
+// we are destructuring the user from the root reducer, which in turn redirects us to the user reducer and thus returning the state of the currentUser that we need here
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+//export default connect(null, mapDispatchToProps)(App);
 
 // dynamically giving a path or a link
 /*
@@ -148,7 +162,7 @@ function App() {
 }
 */
 
-/* 
+/*
 
 function App() {
   return (
