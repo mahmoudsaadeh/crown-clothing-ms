@@ -118,7 +118,7 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user))
 });
 
-// we are destructuring the user from the root reducer, which in turn redirects us to the user reducer and thus returning the state of the currentUser that we need here
+// we are destructuring the user from the root reducer (the one big state object), which in turn redirects us to the user reducer and thus returning the state of the currentUser that we need here
 const mapStateToProps = ({ user }) => ({
   currentUser: user.currentUser
 });
