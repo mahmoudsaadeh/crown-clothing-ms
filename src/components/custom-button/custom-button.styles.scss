@@ -9,15 +9,18 @@
     background-color: black;
     color: white;
     text-transform: uppercase;
-    font-family: 'Open Sans Condensed';
+    font-family: "Open Sans Condensed";
     font-weight: bolder;
     border: none;
     cursor: pointer;
-  
+    // to make sure everything is centered inside of our button
+    display: flex;
+    justify-content: center;
+
     &:hover {
-      background-color: white;
-      color: black;
-      border: 1px solid black;
+        background-color: white;
+        color: black;
+        border: 1px solid black;
     }
 
     &.google-sign-in {
@@ -29,5 +32,16 @@
             border: none;
         }
     }
+
+    &.inverted {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+
+        &:hover {
+            background-color: black;
+            color: white;
+            border: none;
+        }
+    }
 }
-  

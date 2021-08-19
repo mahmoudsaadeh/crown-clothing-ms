@@ -24,6 +24,7 @@ class App extends React.Component {
     }
   }*/
 
+  // this is a function (or an anonymous variable that can stay a var OR assigned as function)
   unsubscribeFromAuth = null;
 
   /*
@@ -37,12 +38,18 @@ class App extends React.Component {
  
            createUserProfileDocument(user);
        })
-   }*/
+   }
+  */
 
   // storing data in our app - in state (not db)
   componentDidMount() {
 
-    const { setCurrentUser } = this.props; // what props??
+    
+    /* 
+      - we can pass any props to any component in react (class or functional) 
+      - setCurrentUser is destructured from the props, and the props gets this value from root reducer --> user actions; using the map dispatch method below
+    */
+    const { setCurrentUser } = this.props;
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if userAuth is not null
@@ -92,7 +99,12 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
-          {/* render: a js invocation that determines what component to return */}
+          {
+            /* 
+              - render: a js invocation that determines what component to return 
+              - this.props.currentUser: does not relate to any of the currentUsers below, it gets the value from the root reducer (state) ---> remember that we wrapped the <App /> component with the Provider component, which gives the whole app access to the store which in turn gives us access to the root reducer (state)
+            */
+          }
           <Route exact path='/signin'
             render={() =>
               this.props.currentUser ?
@@ -115,10 +127,16 @@ const mapDispatchToProps = (dispatch) => ({
   // is going to be an action object that I'm gonna pass to every reducer
 
   // setting the 'user' to setCurrentUser (first one here) which was in the ComponentDidMount, then passing that user object as the payload to the user.actions.js [explained by me]
+
+  /* The setCurrentUser here is the same one defined in the componentDidMount function, because also the keys used in the dispatching process (in mapDispatchToProps) are mapped to props so that they are accessed from within our component */
+  /* user here represents the value of setCurrentUser (the one before it), we are obliged to do so because this is the only way (using parameters) to pass setCurrentUser to a function */
   setCurrentUser: (user) => dispatch(setCurrentUser(user))
 });
 
 // we are destructuring the user from the root reducer (the one big state object), which in turn redirects us to the user reducer and thus returning the state of the currentUser that we need here
+/* 
+  we are getting the currentUser from the user sub-state in the root reducer and setting it to the currentUser here (the 1st one), so that we can access it from within our App component through the props
+*/
 const mapStateToProps = ({ user }) => ({
   currentUser: user.currentUser
 });

@@ -1,8 +1,12 @@
 
+import { addItem } from './cart.actions';
 import CartActionTypes from './cart.types';
 
+import { addItemToCart } from './cart.utils';
+
 const INITIAL_STATE = {
-    hidden: true
+    hidden: true,
+    cartItems: []
 };
 
 // here we are not returning an object as in user, we are just toggling the initial state
@@ -13,6 +17,13 @@ const cartReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 hidden: !state.hidden
+            }
+        case CartActionTypes.ADD_ITEM:
+            return {
+                ...state,
+                // spreading out existing cart items first, then getting any added elements to the array
+                // it is important to make sure that we return a NEW array, because if we return the same one, React will not re-render the component (so every time, a new array or object should be returned in order to tackle changes)
+                cartItems: addItemToCart(state.cartItems, action.payload)
             }
         default:
             return state;

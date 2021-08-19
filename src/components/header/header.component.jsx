@@ -12,7 +12,9 @@ import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
-
+/* 
+    currentUser and hidden are accessed through the props of this component (as every react component has props by default), where mapStateToProps maps the state (through root reducer) to the props of every component including this one. Here we specified that we want currentUser and hidden properties from the user and cart sub-states found in the root reducer
+*/
 const Header = ({ currentUser, hidden }) => (
     <div className='header'>
         <Link className='logo-container' to="/">
@@ -54,13 +56,17 @@ const Header = ({ currentUser, hidden }) => (
     currentUser: state.user.currentUser
 });*/
 
+
 // an advanced way of destructuring (destructuring nested values)
 // I want the value: currentUser of the user, 
 // where the user is destructured of from the state (root state)
+
+/* So here we are passing the destructured values from the state to the props of this component so that we can access the state LEGALLY as redux wants! :)) */
 const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
     currentUser,
     hidden
 });
+
 
 // mapStateToProps will return the value of our current user (will initially return null)
 
