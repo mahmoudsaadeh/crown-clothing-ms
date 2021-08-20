@@ -1,5 +1,5 @@
 
-import { addItem } from './cart.actions';
+//import { addItem } from './cart.actions';
 import CartActionTypes from './cart.types';
 
 import { addItemToCart } from './cart.utils';
