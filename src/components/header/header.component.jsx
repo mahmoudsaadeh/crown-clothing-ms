@@ -12,6 +12,10 @@ import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
+import { createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { selectCartHidden } from '../../redux/cart/cart.selectors';
+
 /* 
     currentUser and hidden are accessed through the props of this component (as every react component has props by default), where mapStateToProps maps the state (through root reducer) to the props of every component including this one. Here we specified that we want currentUser and hidden properties from the user and cart sub-states found in the root reducer
 */
@@ -45,6 +49,22 @@ const Header = ({ currentUser, hidden }) => (
     </div>
 );
 
+
+/*const mapStateToProps = (state) => ({
+    currentUser: selectCurrentUser(state),
+    hidden: selectCartHidden(state)
+});*/
+
+// this will pass the top level state to all the selectors automatically
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    hidden: selectCartHidden
+});
+
+export default connect(mapStateToProps)(Header);
+
+
+
 // this naming can be different but mapStateToProps is standard with redux code bases
 // the state here is the top level root reducer
 /*const mapStateToProps = (state) => ({
@@ -61,13 +81,8 @@ const Header = ({ currentUser, hidden }) => (
 // I want the value: currentUser of the user, 
 // where the user is destructured of from the state (root state)
 
-/* So here we are passing the destructured values from the state to the props of this component so that we can access the state LEGALLY as redux wants! :)) */
-const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
+// So here we are passing the destructured values from the state to the props of this component so that we can access the state LEGALLY as redux wants! :)) 
+/*const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
     currentUser,
     hidden
-});
-
-
-// mapStateToProps will return the value of our current user (will initially return null)
-
-export default connect(mapStateToProps)(Header);
+});*/
