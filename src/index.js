@@ -7,13 +7,21 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-import store from './redux/store';
+// import store from './redux/store';
 
+// we made a react integration because redux persist can be used in other environments such as React Native
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './redux/store';
+
+
+/* the persistor here represents the persisted version of our store */
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <PersistGate persistor={persistor}>
+          <App />
+        </PersistGate>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
