@@ -21,6 +21,7 @@ const CollectionsOverview = ({ collections }) => (
 );
 
 const mapStateToProps = createStructuredSelector({
+    // the selector here changes the SHOP_DATA from object to an array so that we can use map()
     collections: selectCollectionsForPreview
 });
 
