@@ -12,7 +12,13 @@ import { persistStore } from "redux-persist";
 /*
 Middleware: It provides a third-party extension point between dispatching an action, and the moment it reaches the reducer. People use Redux middleware for logging, crash reporting, talking to an asynchronous API, routing, and more.
 */
-const middlewares = [logger]; 
+//const middlewares = [logger]; 
+
+const middlewares = [];
+// show logger messages in console only in development mode
+if (process.env.NODE_ENV === 'development') {
+    middlewares.push(logger);
+}
 
 // applyMiddleware takes an infinite number of middlewares (we can use other than logger)
 export const store = createStore(rootReducer, applyMiddleware(...middlewares));
