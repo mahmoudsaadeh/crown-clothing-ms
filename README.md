@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+This is the second project (the first big one) during the React course that I'm taking on udemy, it was developed step-by-step with my tutor. The tools used mainly were React, Redux, Firebase auth and Firestore, Stripe API, CSS in JS styled components, and finally a deployment on Heroku.
+Note that this project will undergo further optimazations during the course using advanced tools, in addition to testing the app at the end of the course!
+
 ## Available Scripts
 
 In the project directory, you can run:
