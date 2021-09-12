@@ -1,8 +1,11 @@
+
 import React from 'react';
 
 import { withRouter } from 'react-router-dom';
 
-import './menu-item.styles.scss';
+// import './menu-item.styles.scss';
+
+import { MenuItemContainer, BackgroundImageComponent, ContentContainer, TitleContainer, SubTitleContainer } from './menu-item.styles';
 
 
 // this is the same as passing props and then calling props.title
@@ -17,6 +20,26 @@ import './menu-item.styles.scss';
 
 // some matched url/linkUrl
 const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
+    <MenuItemContainer size={size} 
+            onClick={() => history.push(`${match.url}${linkUrl}`)}>
+        <BackgroundImageComponent className='background-image' imageUrl={imageUrl} />
+        <ContentContainer>
+            <TitleContainer>{title.toUpperCase()}</TitleContainer>
+            <SubTitleContainer>SHOP NOW</SubTitleContainer>
+        </ContentContainer>
+    </MenuItemContainer>
+);
+
+// this returns us a super powered MenuItem component with access to location, match,
+// and history props that we need access to
+
+export default withRouter(MenuItem);
+
+
+/*
+// before styled comps
+
+const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
     <div className={`${size} menu-item`} 
             onClick={() => history.push(`${match.url}${linkUrl}`)}>
         <div className='background-image' style={{
@@ -30,8 +53,4 @@ const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
         </div>
     </div>
 );
-
-// this returns us a super powered MenuItem component with access to location, match,
-// and history props that we need access to
-
-export default withRouter(MenuItem);
+*/

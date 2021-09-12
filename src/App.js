@@ -11,12 +11,15 @@ import CheckoutPage from './pages/checkout/checkout.component';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+/*import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';*/
 
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
 
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selectors';
+
+// import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
 
 class App extends React.Component {
@@ -54,6 +57,7 @@ class App extends React.Component {
       - setCurrentUser is destructured from the props, and the props gets this value from root reducer --> user actions; using the map dispatch method below
     */
     const { setCurrentUser } = this.props;
+    // const { setCurrentUser, collectionsArray } = this.props;
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if userAuth is not null
@@ -82,8 +86,14 @@ class App extends React.Component {
       else {
         // set currentUser to null
         setCurrentUser(userAuth);
+
+        // addCollectionAndDocuments('collections', collectionsArray);
+        // instead of saving all info, including the route name and the manual id we wrote, we return a new array with the title and the items
+        /*addCollectionAndDocuments('collections', collectionsArray.map(({title, items}) => 
+            ({ title, items })
+        ));*/
       }
-    })
+    }, error => console.log(error));
   }
 
   /*
@@ -151,7 +161,8 @@ const mapDispatchToProps = (dispatch) => ({
 });*/
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser/*,
+  collectionsArray: selectCollectionsForPreview*/
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
@@ -193,17 +204,7 @@ function App() {
 }
 */
 
-/*
 
-function App() {
-  return (
-    <div>
-      <HomePage />
-    </div>
-  );
-}
-
-*/
 
 
 

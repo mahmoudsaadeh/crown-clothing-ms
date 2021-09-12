@@ -27,4 +27,5 @@ export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 export const persistor = persistStore(store);
 
 // export default store;
-export default {store, persistor}; // so that we have access to both
+const final_object = {store, persistor};
+export default final_object; // so that we have access to both

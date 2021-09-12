@@ -1,7 +1,7 @@
 // import React from 'react';
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 
-import './header.styles.scss';
+// import './header.styles.scss';
 
 import { auth } from '../../firebase/firebase.utils';
 
@@ -16,9 +16,64 @@ import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 
+import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink } from './header.styles';
+
 /* 
     currentUser and hidden are accessed through the props of this component (as every react component has props by default), where mapStateToProps maps the state (through root reducer) to the props of every component including this one. Here we specified that we want currentUser and hidden properties from the user and cart sub-states found in the root reducer
 */
+const Header = ({ currentUser, hidden }) => (
+    <HeaderContainer>
+        <LogoContainer to="/">
+            <Logo className='logo' />
+        </LogoContainer>
+        <OptionsContainer>
+            <OptionLink to='/shop'>
+                SHOP
+            </OptionLink>
+            <OptionLink to='/contact'>
+                CONTACT
+            </OptionLink>
+            {
+                // we can omit the ()
+                // the OptionLink is a link, but it is rendered as div (using as), it is overridden
+                currentUser ? (
+                    <OptionLink as='div' onClick={() => auth.signOut()}>
+                        SIGN OUT
+                    </OptionLink>
+                )
+                :
+                (
+                    <OptionLink to='/signin'>
+                        SIGN IN
+                    </OptionLink>   
+                ) 
+            }
+            <CartIcon />
+        </OptionsContainer>
+        {
+            hidden ? null: <CartDropdown />
+        }
+    </HeaderContainer>
+);
+
+
+/*const mapStateToProps = (state) => ({
+    currentUser: selectCurrentUser(state),
+    hidden: selectCartHidden(state)
+});*/
+
+// this will pass the top level state to all the selectors automatically
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    hidden: selectCartHidden
+});
+
+export default connect(mapStateToProps)(Header);
+
+
+/*
+// without styled components
+
 const Header = ({ currentUser, hidden }) => (
     <div className='header'>
         <Link className='logo-container' to="/">
@@ -49,20 +104,7 @@ const Header = ({ currentUser, hidden }) => (
     </div>
 );
 
-
-/*const mapStateToProps = (state) => ({
-    currentUser: selectCurrentUser(state),
-    hidden: selectCartHidden(state)
-});*/
-
-// this will pass the top level state to all the selectors automatically
-const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
-    hidden: selectCartHidden
-});
-
-export default connect(mapStateToProps)(Header);
-
+*/
 
 
 // this naming can be different but mapStateToProps is standard with redux code bases

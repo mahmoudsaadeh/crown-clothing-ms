@@ -8,7 +8,7 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 import { connect } from 'react-redux';
 import { selectCollection } from '../../redux/shop/shop.selectors';
 
-const CollectionPage = ({ match, collection }) => {
+const CollectionPage = ({ collection }) => {
 
     const { title, items } = collection;
 

@@ -19,10 +19,23 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     // if user is not signed in (does not exist OR null), then leave this func
     if (!userAuth) return;
 
+    // A Document Reference
     const userRef = firestore.doc(`users/${userAuth.uid}`);
-    const snapshot = await userRef.get();
+    // console.log(userRef);
 
-    //console.log(snapshot);
+    // A Collection Reference
+    /*const collectionRef = firestore.collection('users');*/
+
+    // A Document Snapshot
+    const snapshot = await userRef.get();
+    // console.log(snapshot);
+    // console.log(snapshot.data());
+
+    // A Collection Snapshot
+    /*const collectionSnapshot = await collectionRef.get();
+    console.log({ collectionSnapshot });
+    console.log({ collection: collectionSnapshot.docs.map(doc => doc.data()) });*/
+
 
     // if snapshot doesn't exits -> no data found, so we will add some
     if (!snapshot.exists) {
@@ -42,8 +55,53 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
 
     return userRef;
-}
+};
 
+// moving shop data to firebase. This method can be used any new collection and docs to our db PROGRAMMATICALLY!
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey);
+    //console.log(collectionRef);
+
+    const batch = firestore.batch();
+    /* forEach is the same as .map(), except this does not return a new array as .map() */
+    objectsToAdd.forEach(obj => {
+        // we want it to get the doc at an empty string. What this will do is that firebase will give me a new document reference in this collection and randomly generate an id for me
+        const newDocRef = collectionRef.doc();
+        // we can use the title instead of the id, but to ensure unique keys, we'll use an id
+        // const newDocRef = collectionRef.doc(obj.title);
+        // console.log(newDocRef);
+        batch.set(newDocRef, obj);
+    });
+
+    return await batch.commit();
+};
+
+// we want to convert the snapshot to an object instead of the array that we're going to get back
+export const convertCollectionsSnapshotToMap = (collections) => {
+    const transformedCollection = collections.docs.map(doc => {
+        const { title, items } = doc.data();
+
+        return {
+            /* encodeURI returns a string that is good to be passed in a url (it removes spaces or any other characters that a url cannot read) */
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title,
+            items
+        }
+    });
+
+    // console.log(transformedCollection);
+
+    /*
+        - change our array we got into an object to store in our reducer
+        - the initial value of the accumulator is an empty object
+    */
+    return transformedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    }, {});
+
+};
 
 firebase.initializeApp(config);
 
