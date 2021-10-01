@@ -1,5 +1,6 @@
 
 import React from 'react';
+// import React, { useEffect } from 'react';
 
 import './collection.styles.scss';
 
@@ -8,7 +9,24 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 import { connect } from 'react-redux';
 import { selectCollection } from '../../redux/shop/shop.selectors';
 
+// import { firestore } from '../../firebase/firebase.utils';
+
+
 const CollectionPage = ({ collection }) => {
+
+    // explaining useEffect as componentWillUnmount
+    /*useEffect(() => {
+        console.log('I am subscribing');
+        const unsubscribe = firestore.collection('collections').onSnapshot(snapshot => {
+            console.log(snapshot);
+        });
+        // this is called a clean-up function
+        // a clean-up function is what useEffect calls when the component unmounts
+        return () => {
+            console.log('I am unsubscribed');
+            unsubscribe();
+        }
+    }, []);*/
 
     const { title, items } = collection;
 

@@ -45,6 +45,18 @@ export const selectCollection = memoize((collectionUrlParam) => createSelector(
     )
 );
 
+
+export const selectIsCollectionFetching = createSelector(
+    [selectShop],
+    shop => shop.isFetching
+);
+
+export const selectIsCollectionsLoaded = createSelector(
+    [selectShop],
+    // returns true if empty object or filled one, and false if null
+    shop => !!shop.collections
+);
+
 /*
 // currying with memoization and using .find()
 export const selectCollection = memoize((collectionUrlParam) => createSelector(

@@ -1,11 +1,48 @@
 
-import { UserActionTypes } from "./user.types";
+// import { UserActionTypes } from "./user.types"; // importing a normal exported object
 
+import UserActionTypes from './user.types'; // importing a default exported object
+
+const INITIAL_STATE = {
+    currentUser: null,
+    error: null
+}
+
+const userReducer = (state = INITIAL_STATE, action) => {
+    // if-else statements can be used also
+    switch (action.type) {
+        // stacking cases with common return statement
+        case UserActionTypes.SIGN_IN_SUCCESS:
+            return {
+                ...state,
+                currentUser: action.payload,
+                error: null
+            }
+        case UserActionTypes.SIGN_OUT_SUCCESS:
+            return {
+                ...state,
+                currentUser: null,
+                error: null
+            }
+        case UserActionTypes.SIGN_IN_FAILURE:
+        case UserActionTypes.SIGN_OUT_FAILURE:
+        case UserActionTypes.SIGN_UP_FAILURE:
+            return {
+                ...state,
+                error: action.payload
+            }
+        default:
+            return state;
+    }
+};
+
+export default userReducer;
+
+
+/*
 const INITIAL_STATE = {
     currentUser: null
 }
-
-// the state represents the state of the currentUser
 
 const userReducer = (state = INITIAL_STATE, action) => {
     // if-else statements can be used also
@@ -21,6 +58,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
 };
 
 export default userReducer;
+*/
 
 /*
     - The state is gonna be something that the redux Store is going to pass to this reducer whenever an action fires. The state will be whatever the state is currently when that actions gets fired.

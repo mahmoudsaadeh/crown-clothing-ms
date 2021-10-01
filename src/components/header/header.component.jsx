@@ -3,7 +3,7 @@
 
 // import './header.styles.scss';
 
-import { auth } from '../../firebase/firebase.utils';
+// import { auth } from '../../firebase/firebase.utils';
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
@@ -18,10 +18,12 @@ import { selectCartHidden } from '../../redux/cart/cart.selectors';
 
 import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink } from './header.styles';
 
+import { signOutStart } from '../../redux/user/user.actions';
+
 /* 
     currentUser and hidden are accessed through the props of this component (as every react component has props by default), where mapStateToProps maps the state (through root reducer) to the props of every component including this one. Here we specified that we want currentUser and hidden properties from the user and cart sub-states found in the root reducer
 */
-const Header = ({ currentUser, hidden }) => (
+const Header = ({ currentUser, hidden, signOutStart }) => (
     <HeaderContainer>
         <LogoContainer to="/">
             <Logo className='logo' />
@@ -36,8 +38,13 @@ const Header = ({ currentUser, hidden }) => (
             {
                 // we can omit the ()
                 // the OptionLink is a link, but it is rendered as div (using as), it is overridden
-                currentUser ? (
+                /*currentUser ? (
                     <OptionLink as='div' onClick={() => auth.signOut()}>
+                        SIGN OUT
+                    </OptionLink>
+                )*/
+                currentUser ? (
+                    <OptionLink as='div' onClick={signOutStart}>
                         SIGN OUT
                     </OptionLink>
                 )
@@ -68,7 +75,11 @@ const mapStateToProps = createStructuredSelector({
     hidden: selectCartHidden
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = (dispatch) => ({
+    signOutStart: () => dispatch(signOutStart())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 
 /*

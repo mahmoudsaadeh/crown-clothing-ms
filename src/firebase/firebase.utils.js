@@ -1,3 +1,4 @@
+
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -57,7 +58,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef;
 };
 
-// moving shop data to firebase. This method can be used any new collection and docs to our db PROGRAMMATICALLY!
+// moving shop data to firebase. This method can be used to add any new collection and/or docs to our db PROGRAMMATICALLY!
 export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
     const collectionRef = firestore.collection(collectionKey);
     //console.log(collectionRef);
@@ -78,9 +79,11 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
 
 // we want to convert the snapshot to an object instead of the array that we're going to get back
 export const convertCollectionsSnapshotToMap = (collections) => {
+    // here we store the array of objects that we get from firebase
     const transformedCollection = collections.docs.map(doc => {
         const { title, items } = doc.data();
 
+        // the returned value (object) will be stored as an element in the transformedCollection array
         return {
             /* encodeURI returns a string that is good to be passed in a url (it removes spaces or any other characters that a url cannot read) */
             routeName: encodeURI(title.toLowerCase()),
@@ -97,10 +100,21 @@ export const convertCollectionsSnapshotToMap = (collections) => {
         - the initial value of the accumulator is an empty object
     */
     return transformedCollection.reduce((accumulator, collection) => {
+        // in our case, we have 5 collection titles
         accumulator[collection.title.toLowerCase()] = collection;
         return accumulator;
     }, {});
 
+};
+
+// we are just mimicking functionality that you may encounter when you don't have firebase as the backend - we will use a promise oriented solution that our sagas can yield for
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = auth.onAuthStateChanged(userAuth => {
+            unsubscribe();
+            resolve(userAuth);
+        }, reject);
+    });
 };
 
 firebase.initializeApp(config);
@@ -110,12 +124,17 @@ export const firestore = firebase.firestore();
 
 // setting up the google authentication utility
 // this gives us access to this new GoogleAuthProvider class from the auth library
-const provider = new firebase.auth.GoogleAuthProvider();
+// const provider = new firebase.auth.GoogleAuthProvider(); // before saga
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+
 // we want to always trigger the google popup whenever we use this GoogleAuthProvider
 // for sign in and authentication
-provider.setCustomParameters({ prompt: 'select_account' });
+//provider.setCustomParameters({ prompt: 'select_account' }); // before saga
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+// export const signInWithGoogle = () => auth.signInWithPopup(provider); // before saga
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
 
 export default firebase;
